@@ -15,5 +15,5 @@
   overlays = import ./overlays; # nixpkgs overlays
 
   imewlconverter = pkgs.callPackage ./pkgs/imewlconverter { };
-  # ...
+  waifu2x-vulkan = pkgs.callPackage ./pkgs/waifu2x-vulkan { };
 }
