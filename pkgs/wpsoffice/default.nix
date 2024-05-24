@@ -1,5 +1,6 @@
 { lib
 , stdenv
+, fetchurl
 , dpkg
 , autoPatchelfHook
 , alsa-lib
@@ -19,7 +20,8 @@
 , curl
 , coreutils
 , cacert
-, useChineseVersion ? false
+, freetype
+, useChineseVersion ? true
 }:
 let
   pkgVersion = "11.1.0.11719";
@@ -48,7 +50,6 @@ stdenv.mkDerivation rec {
 
       nativeBuildInputs = [ curl coreutils ];
 
-      impureEnvVars = lib.fetchers.proxyImpureEnvVars;
       SSL_CERT_FILE = "${cacert}/etc/ssl/certs/ca-bundle.crt";
     } ''
     timestamp10=$(date '+%s')
@@ -114,6 +115,14 @@ stdenv.mkDerivation rec {
       substituteInPlace $i \
         --replace /usr/bin $out/bin
     done
+
+    rm -f $out/opt/kingsoft/wps-office/office6/libfreetype.so.6
+    ln -sf ${freetype.overrideAttrs (e: rec {
+      patches = e.patches ++ [
+        ./0000-WPS-compatiblity.patch
+        ./0001-Enable-long-PCF-family-names.patch
+       ];
+    })}/lib/libfreetype.so.6 $out/opt/kingsoft/wps-office/office6
     runHook postInstall
   '';
 
@@ -131,6 +140,6 @@ stdenv.mkDerivation rec {
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
     hydraPlatforms = [ ];
     license = licenses.unfreeRedistributable;
-    maintainers = with maintainers; [ mlatus th0rgal rewine pokon548 plokid ];
+    maintainers = with maintainers; [ mlatus th0rgal rewine pokon548 ];
   };
 }
