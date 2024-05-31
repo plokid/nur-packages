@@ -17,4 +17,5 @@
   imewlconverter = pkgs.callPackage ./pkgs/imewlconverter { };
   waifu2x-vulkan = pkgs.callPackage ./pkgs/waifu2x-vulkan { };
   wpsoffice = pkgs.callPackage ./pkgs/wpsoffice { };
+  wallpaper-engine-kde-plugin = pkgs.callPackage ./pkgs/wallpaper-engine-kde-plugin { };
 }
